@@ -59,10 +59,11 @@ class GameDetails extends Component {
             {this.state.game.team0 + " "}
             vs.
             {" " + this.state.game.team1}
+            <h2>
+              ({this.state.game.date ? this.state.game.date.split("T")[0] : ""})
+            </h2>
           </h1>
-          <h2>
-            ({this.state.game.date ? this.state.game.date.split("T")[0] : ""})
-          </h2>
+
           <Link to={"/add-clip?game_id=" + this.state.game._id}>
             <div className="text-center">
               <button className="btn btn-default" id="add-clip-button">Add Clip</button>
