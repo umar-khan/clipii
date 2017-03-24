@@ -47,7 +47,13 @@ app.get("/teams", (req, res) => {
         .then(teams => {
           console.log(teams);
           teamsArr = teamsArr.concat(teams);
-          res.json(teamsArr.sort());
+
+          function onlyUnique(value, index, self) {
+            return self.indexOf(value) === index;
+          }
+
+          let uniqueArr = teamsArr.filter( onlyUnique );
+          res.json(uniqueArr.sort());
         })
         .catch(err => {
           console.log(err);
