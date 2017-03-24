@@ -11,7 +11,7 @@ class Navbar extends Component {
           <div className="container-fluid">
 
             <div className="navbar-header pull-left">
-              <Link to="/" className="navbar-brand">clipii</Link>
+              <Link to="/" className="navbar-brand">Clipii</Link>
             </div>
             <div className="navbar-header pull-right">
             </div>
