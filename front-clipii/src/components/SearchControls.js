@@ -60,6 +60,9 @@ class SearchControls extends Component {
           <div className="row">
             <div className="col-sm-5">
               <div className="form-group">
+                <label className="control-label">
+                  Team <i className="fa fa-users"></i>
+                </label>
                 <select className="form-control" onChange={this.handleChangeTeam}>
                   <option value="all">All</option>
                   {teamsListJSX}
@@ -68,6 +71,9 @@ class SearchControls extends Component {
             </div>
             <div className="col-sm-5">
               <div className="form-group">
+                <label className="">
+                  League <i className="fa fa-list-ul"></i>
+                </label>
                 <select className="form-control" onChange={this.handleChangeLeague}>
                   <option value="all">All</option>
                   {leaguesListJSX}
@@ -75,7 +81,8 @@ class SearchControls extends Component {
               </div>
             </div>
             <div className="col-sm-2">
-              <button type="submit" className="btn btn-primary">Filter</button>
+              
+              <button id="filterButton" type="submit" className="btn btn-primary">Filter</button>
             </div>
           </div>
         </form>
