@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './App.css';
-import Navbar from './components/Navbar';
 import axios from "axios";
 
 class App extends Component {
@@ -24,7 +23,7 @@ class App extends Component {
 
   filterGames(team, league) {
 
-    axios.get(`http://localhost:8080/games?team=${team}&league=${league}`)
+    axios.get(`/games?team=${team}&league=${league}`)
       .then(response => {
         this.setState({
           gamesList: response["data"],
@@ -38,7 +37,7 @@ class App extends Component {
 
   componentWillMount() {
     // Get list of teams for filter dropdown
-    axios.get(`http://localhost:8080/teams`)
+    axios.get(`/teams`)
       .then(response => {
         this.setState({
           teamsList: response["data"]
@@ -46,14 +45,14 @@ class App extends Component {
       })
 
     // Get list of leagues for filter dropdown
-    axios.get(`http://localhost:8080/leagues`)
+    axios.get(`/leagues`)
       .then(response => {
         this.setState({
           leaguesList: response["data"]
         });
       })
 
-    axios.get(`http://localhost:8080/games?team=${this.state.displayOnly.team}&league=${this.state.displayOnly.league}`)
+    axios.get(`/games?team=${this.state.displayOnly.team}&league=${this.state.displayOnly.league}`)
       .then(response => {
         this.setState({
           gamesList: response["data"]
@@ -68,7 +67,6 @@ class App extends Component {
 
     return (
       <div className="App">
-        <Navbar />
 
         {React.cloneElement(
           this.props.children,

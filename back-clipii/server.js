@@ -22,11 +22,16 @@ const User = require('./models/User');
 const Game = require('./models/Game');
 const Clip = require('./models/Clip');
 
+// Set port to listen on
+const PORT = process.env.PORT || 8080;
+
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
+
+app.use(express.static("../front-clipii/build"));
 
 // Returns array of unique team names in database
 app.get("/teams", (req, res) => {
@@ -255,8 +260,12 @@ app.post("/users/create", (req, res) => {
 // seedGames();
 // seedClips();
 
+app.get("*", (req, res) => {
+  res.sendFile("../front-clipii/build/index.html");
+});
 
-app.listen(8080, () => {
-  console.log("Server running on http://localhost:8080/");
+
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}/`);
   console.log("Press CTRL + C to exit");
 });

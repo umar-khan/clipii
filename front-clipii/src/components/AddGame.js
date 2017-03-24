@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from "axios";
+import Navbar from './Navbar';
 
 class AddClip extends Component {
 
@@ -46,7 +47,7 @@ class AddClip extends Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    axios.post(`http://localhost:8080/games/create`, {
+    axios.post(`/games/create`, {
       team0: this.state.team0,
       team1: this.state.team1,
       league: this.state.league,
@@ -62,51 +63,54 @@ class AddClip extends Component {
   render() {
 
     return (
-      <div className="jumbotron">
-        <h1 id="pageTitle">Game</h1>
-        <div className="container-fluid">
+      <div>
+        <Navbar />
+        <div className="jumbotron">
+          <h1 id="pageTitle">Game</h1>
+          <div className="container-fluid">
 
-          <form className="form-horizontal" onSubmit={this.handleSubmit}>
-            <div className="form-group">
-              <label className="col-sm-2 control-label">
-                Team 1 <i className="fa fa-users"></i>
-              </label>
-              <div className="col-sm-8">
-                <input type="text" className="form-control" onChange={this.handleChangeTeam0} />
-              </div>
+            <form className="form-horizontal" onSubmit={this.handleSubmit}>
+              <div className="form-group">
+                <label className="col-sm-2 control-label">
+                  Team 1 <i className="fa fa-users"></i>
+                </label>
+                <div className="col-sm-8">
+                  <input type="text" className="form-control" onChange={this.handleChangeTeam0} />
+                </div>
 
-            </div>
-            <div className="form-group">
-              <label className="col-sm-2 control-label">
-                Team 2 <i className="fa fa-users"></i>
-              </label>
-              <div className="col-sm-8">
-                <input type="text" className="form-control" onChange={this.handleChangeTeam1} />
               </div>
-            </div>
-            <div className="form-group">
-              <label className="col-sm-2 control-label">
-                League <i className="fa fa-list-ul"></i>
-              </label>
-              <div className="col-sm-8">
-                <input type="text" className="form-control" onChange={this.handleChangeLeague} />
+              <div className="form-group">
+                <label className="col-sm-2 control-label">
+                  Team 2 <i className="fa fa-users"></i>
+                </label>
+                <div className="col-sm-8">
+                  <input type="text" className="form-control" onChange={this.handleChangeTeam1} />
+                </div>
               </div>
-            </div>
-            <div className="form-group">
-              <label className="col-sm-2 control-label">
-                Date <i className="fa fa-calendar"></i>
-              </label>
-              <div className="col-sm-8">
-                <input type="date" className="form-control" onChange={this.handleChangeDate} />
+              <div className="form-group">
+                <label className="col-sm-2 control-label">
+                  League <i className="fa fa-list-ul"></i>
+                </label>
+                <div className="col-sm-8">
+                  <input type="text" className="form-control" onChange={this.handleChangeLeague} />
+                </div>
               </div>
-            </div>
-            <div className="form-group">
-              <div className="col-sm-offset-2 col-sm-10">
-                <button type="submit" className="btn btn-default">Add Game</button>
+              <div className="form-group">
+                <label className="col-sm-2 control-label">
+                  Date <i className="fa fa-calendar"></i>
+                </label>
+                <div className="col-sm-8">
+                  <input type="date" className="form-control" onChange={this.handleChangeDate} />
+                </div>
               </div>
-            </div>
-          </form>
+              <div className="form-group">
+                <div className="col-sm-offset-2 col-sm-10">
+                  <button type="submit" className="btn btn-default">Add Game</button>
+                </div>
+              </div>
+            </form>
 
+          </div>
         </div>
       </div>
     )

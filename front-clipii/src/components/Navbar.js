@@ -14,8 +14,6 @@ class Navbar extends Component {
               <Link to="/" className="navbar-brand">clipii</Link>
             </div>
             <div className="navbar-header pull-right">
-              <Link to="/" className="navbar-brand">Login</Link>
-              <Link to="/" className="navbar-brand">Register</Link>
             </div>
 
           </div>

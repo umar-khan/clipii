@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from "axios";
+import Navbar from './Navbar';
 import { Link } from "react-router";
 
 class GameDetails extends Component {
@@ -16,14 +17,14 @@ class GameDetails extends Component {
   componentWillMount() {
     let gameId = this.props.location.pathname.split("/")[2];
     // Get list of teams for filter dropdown
-    axios.get(`http://localhost:8080/games/${gameId}`)
+    axios.get(`/games/${gameId}`)
       .then(response => {
         this.setState({
           game: response["data"][0]
         });
       })
 
-    axios.get(`http://localhost:8080/clips/${gameId}`)
+    axios.get(`/clips/${gameId}`)
       .then(response => {
         this.setState({
           clips: response["data"]
@@ -52,12 +53,16 @@ class GameDetails extends Component {
 
     return (
       <div>
+        <Navbar />
         <div className="jumbotron">
           <h1 id="pageTitle">
             {this.state.game.team0 + " "}
             vs.
-          {" " + this.state.game.team1} ({this.state.game.date ? this.state.game.date.split("T")[0] : ""})
+            {" " + this.state.game.team1}
           </h1>
+          <h2>
+            ({this.state.game.date ? this.state.game.date.split("T")[0] : ""})
+          </h2>
           <Link to={"/add-clip?game_id=" + this.state.game._id}>
             <div className="text-center">
               <button className="btn btn-default" id="add-clip-button">Add Clip</button>
