@@ -55,7 +55,7 @@ class AddClip extends Component {
       user_id: this.props.user_id
     })
       .then(response => {
-        window.location.href = `http://localhost:3000/`
+        window.location.href = `/`
       })
 
   }

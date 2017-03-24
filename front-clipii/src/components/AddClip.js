@@ -52,7 +52,7 @@ class AddClip extends Component {
         this.setState({
           game_id: response["data"]["game_id"]
         });
-        window.location.href = `http://localhost:3000/game/${this.state.game_id}`;
+        window.location.href = `/game/${this.state.game_id}`;
       })
   }
 
