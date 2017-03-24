@@ -261,7 +261,7 @@ app.post("/users/create", (req, res) => {
 // seedClips();
 
 app.get("*", (req, res) => {
-  res.sendFile("../front-clipii/build/index.html");
+  res.sendFile("/home/umar/clipii/front-clipii/build/index.html");
 });
 
 
