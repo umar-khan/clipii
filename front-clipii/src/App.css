@@ -1,0 +1,25 @@
+video {
+    width:100%;
+}
+
+body {
+    background-color: #73a857;
+}
+.jumbotron {
+    background-color: #73a857;
+    color: white;
+    
+    padding-top: 0px;
+}
+#pageTitle{
+    padding-bottom: 50px;
+    text-align: center;
+}
+
+.list-group-item {
+    margin: 5px;
+}
+
+.list {
+    margin-bottom: 40px;
+}

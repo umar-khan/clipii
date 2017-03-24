@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const request = require("request");
+const cheerio = require("cheerio");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -15,6 +17,7 @@ db.once('open', function () {
   console.log("Connected to db at /data/db/")
 });
 
+// Import DB Models
 const User = require('./models/User');
 const Game = require('./models/Game');
 const Clip = require('./models/Clip');
@@ -39,7 +42,7 @@ app.get("/teams", (req, res) => {
         .then(teams => {
           console.log(teams);
           teamsArr = teamsArr.concat(teams);
-          res.json(teamsArr);
+          res.json(teamsArr.sort());
         })
         .catch(err => {
           console.log(err);
@@ -59,7 +62,7 @@ app.get("/leagues", (req, res) => {
   Game.find().distinct("league")
     .then(leagues => {
       console.log(leagues);
-      res.json(leagues);
+      res.json(leagues.sort());
     })
     .catch(err => {
       console.log(err);
@@ -72,40 +75,79 @@ app.get("/leagues", (req, res) => {
 // Returns an array of games.
 app.get("/games", (req, res) => {
 
-  // Game.find({team0: 'real madrid'})
-
-  // Game.find({$and: [{$or: [{team0: 'b'}, {team1: 'b'}]}, {}])
+  console.log("hit game endpoint");
 
 
-  // Game.find({team0: })
-  //   .then(games => {
-  //     console.log(games);
-  //     res.json(games);
-  //   })
-  //   .catch(err => {
-  //     console.log(err);
-  //     res.json(err);
-  //   })
 
-  Game.find().distinct("team0")
-    .then(teams => {
-      console.log(teams);
-      res.json(teams);
+  if (req.query.team !== "all" && req.query.league !== "all") {
+    Game.find({
+      $and: [
+        { $or: [{ team0: req.query.team }, { team1: req.query.team }] },
+        { league: req.query.league }
+      ]
+    })
+      .sort("-createdAt")
+      .then(games => {
+        console.log(games);
+        res.json(games);
+      })
+      .catch(err => {
+        console.log(err);
+        res.json(err);
+      })
+  } else if (req.query.team !== "all") {
+    Game.find({ $or: [{ team0: req.query.team }, { team1: req.query.team }] }).sort("-createdAt")
+      .then(games => {
+        console.log(games);
+        res.json(games);
+      })
+      .catch(err => {
+        console.log(err);
+        res.json(err);
+      })
+  } else if (req.query.league !== "all") {
+    Game.find({ league: req.query.league }).sort("-createdAt")
+      .then(games => {
+        console.log(games);
+        res.json(games);
+      })
+      .catch(err => {
+        console.log(err);
+        res.json(err);
+      })
+  } else {
+    Game.find({}).sort("-createdAt")
+      .then(games => {
+        console.log(games);
+        res.json(games);
+      })
+      .catch(err => {
+        console.log(err);
+        res.json(err);
+      })
+  }
+
+
+  console.log(req.query);
+
+});
+
+app.get("/games/:gameId", (req, res) => {
+
+  console.log(req.params.gameId);
+
+
+  Game.find({ _id: req.params.gameId })
+    .sort("-createdAt")
+    .then(games => {
+      console.log(games);
+      res.json(games);
     })
     .catch(err => {
       console.log(err);
       res.json(err);
     })
 
-  // Game.find({})
-  //   .then(games => {
-  //     console.log(games);
-  //     res.json(games);
-  //   })
-  //   .catch(err => {
-  //     console.log(err);
-  //     res.json(err);
-  //   })
 });
 
 // Create a game
@@ -125,10 +167,10 @@ app.post("/games/create", (req, res) => {
 
 // Get list of clips based on the "game_id" query string parameter in URL.
 // Returns array of clips. Returns empty array if no clips associated to a game
-app.get("/clips", (req, res) => {
-  const gameId = req.query.game_id;
+app.get("/clips/:gameId", (req, res) => {
+  const gameId = req.params.gameId;
 
-  Clip.find({ game_id: gameId })
+  Clip.find({ game_id: gameId }).sort("minute")
     .then(clips => {
       console.log(clips);
       res.json(clips);
@@ -143,16 +185,51 @@ app.get("/clips", (req, res) => {
 // Create a clip
 app.post("/clips/create", (req, res) => {
   const newClip = new Clip(req.body);
+  console.log(typeof newClip.url);
+  let src = "http:";
+  let type = "";
 
-  newClip.save()
-    .then(clip => {
-      console.log(clip);
-      res.json(clip);
-    })
-    .catch(err => {
-      console.log(err);
-      res.json(err);
-    })
+
+  if (newClip.url.indexOf("streamable.com") > -1) {
+
+    request(newClip.url, function (error, response, body) {
+      if (!error) {
+
+        let $ = cheerio.load(body);
+
+
+        $('video').each(function () {
+          src = src + $(this).children("source").attr("src");
+          newClip.url = src;
+          newClip.save()
+            .then(clip => {
+              console.log(clip);
+              res.json(clip);
+            })
+            .catch(err => {
+              console.log(err);
+              res.json(err);
+            })
+        });
+
+
+      } else {
+        console.log("We've encountered an error: " + error);
+      }
+    });
+
+  } else {
+
+    newClip.save()
+      .then(clip => {
+        console.log(clip);
+        res.json(clip);
+      })
+      .catch(err => {
+        console.log(err);
+        res.json(err);
+      })
+  }
 });
 
 // Create a user

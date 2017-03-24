@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const clipSchema = new Schema({
   minute: Number,
   url: String,
+  description: String,
   game_id: {type: Schema.Types.ObjectId, ref: "Game"},
   user_id: {type: Schema.Types.ObjectId, ref: "User"}
 }, {

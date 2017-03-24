@@ -1,43 +1,86 @@
 import React, { Component } from 'react';
 import './App.css';
 import Navbar from './components/Navbar';
-import SearchControls from './components/SearchControls';
 import axios from "axios";
 
 class App extends Component {
 
-  constructor(){
-		super();
-		this.state = {
+  constructor() {
+    super();
+    this.state = {
 
-      teamsAll: [],
-      leaguesAll: [],
-			displayOnly: {
+      teamsList: [],
+      leaguesList: [],
+      gamesList: [],
+      user_id: "58d014b021023435d50eb9d3",
+      displayOnly: {
         team: "all",
         league: "all"
       }
-		};
-		
-	}
+    };
+    this.filterGames = this.filterGames.bind(this);
+
+  }
+
+  filterGames(team, league) {
+
+    axios.get(`http://localhost:8080/games?team=${team}&league=${league}`)
+      .then(response => {
+        this.setState({
+          gamesList: response["data"],
+          displayOnly: {
+            team: team,
+            league: league
+          }
+        });
+      })
+  }
 
   componentWillMount() {
-		axios.get(`http://localhost:8080/leagues?team=${this.state.displayOnly.team}&league=${this.state.displayOnly.league}`)
-			.then(response => {
-        console.log(response["data"]);
-				// this.setState({
-				// 	todos: response["data"]
-				// });
-			})
-	}
+    // Get list of teams for filter dropdown
+    axios.get(`http://localhost:8080/teams`)
+      .then(response => {
+        this.setState({
+          teamsList: response["data"]
+        });
+      })
+
+    // Get list of leagues for filter dropdown
+    axios.get(`http://localhost:8080/leagues`)
+      .then(response => {
+        this.setState({
+          leaguesList: response["data"]
+        });
+      })
+
+    axios.get(`http://localhost:8080/games?team=${this.state.displayOnly.team}&league=${this.state.displayOnly.league}`)
+      .then(response => {
+        this.setState({
+          gamesList: response["data"]
+        });
+      })
+
+  }
 
   render() {
+
+    const gamesList = this.state.gamesList;
+
     return (
       <div className="App">
         <Navbar />
-        <h1>clipii</h1>
-        <SearchControls displayOnly={this.state.displayOnly} />
-        
-        {React.cloneElement(this.props.children, { songs: "songs", playSong: "this.playSong"})}
+
+        {React.cloneElement(
+          this.props.children,
+          {
+            gamesList: gamesList,
+            teamsList: this.state.teamsList,
+            leaguesList: this.state.leaguesList,
+            user_id: this.state.user_id,
+            displayOnly: this.state.displayOnly,
+            filterGames: this.filterGames
+          }
+        )}
       </div>
     );
   }
