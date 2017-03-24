@@ -58,7 +58,6 @@ class App extends Component {
           gamesList: response["data"]
         });
       })
-
   }
 
   render() {
